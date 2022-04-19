@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <limits.h>
 #include <vector>
+#include <unordered_map>
 
 // PRUEBA 2 - Ejercicio 1
 int max_value, min_value;
@@ -110,4 +111,83 @@ TEST_CASE("Testing Set Representation Function")
     CHECK_EQ(result[6], 90);
     CHECK_EQ(result[7], 54);
     CHECK_EQ(result[8], 2);
+}
+
+// PRUEBA 2 - Ejercicio 4
+std::unordered_map<char, int> chars_counter(std::string S)
+{
+    std::unordered_map<char, int> chars;
+    std::unordered_map<char, int>::iterator it;
+
+    if (S.length() < 100) {
+        for (auto temp : S) {
+            it = chars.find(temp);
+            it == chars.end() ? chars[temp] = 1 : chars[temp]++;
+        }
+    }
+
+    return chars;
+}
+
+// TEST - Ejercicio 4
+TEST_CASE("Testing Chars Counter Function")
+{
+    std::unordered_map<char, int> chars;
+    std::string S = "majsoasndaasshansasjhasmauytrrrtrtu";
+
+    chars = chars_counter(S);
+
+    CHECK(chars['a'] == 8);
+    CHECK(chars['m'] == 2);
+    CHECK(chars['j'] == 2);
+    CHECK(chars['o'] == 1);
+    CHECK(chars['s'] == 7);
+    CHECK(chars['t'] == 3);
+    CHECK(chars['n'] == 2);
+}
+
+// PRUEBA 2 - Ejercicio 5
+std::string longest_word(std::string S)
+{
+    std::string word = "", lw;
+    std::vector<std::string> words;
+    int max_length = 0; 
+
+    for ( auto c = 0;  c < S.length() + 1; c++) {
+        if ( S[c] == ' ' || S[c] == '\0') {
+            words.push_back(word);
+            word.clear();
+        }
+        else
+            word.push_back(S[c]);
+    }
+
+    for (auto word : words) {
+        if ( word.length() > max_length) {
+            max_length = word.length();
+            lw = word;
+        }
+    }
+
+    return lw;
+}
+
+// TEST - Ejercicio 5
+TEST_CASE("Testing Longest Word Function")
+{
+    std::string S = "tulipanes conversacion estrago maniobra";
+    std::string lw;
+
+    lw = longest_word(S);
+    CHECK_EQ(lw, "conversacion");
+
+    S = "escabullirse correjir doblar contar";
+
+    lw = longest_word(S);
+    CHECK_EQ(lw, "escabullirse");
+
+    S = "conducir talar costurar enfermizo";
+
+    lw = longest_word(S);
+    CHECK_EQ(lw, "enfermizo");   
 }
